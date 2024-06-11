@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wisecow-deployment
+spec:
+  replicas: 1 # Number of Wisecow pods to run
+  selector:
+    matchLabels:
+      app: wisecow
+  template:
+    metadata:
+      labels:
+        app: wisecow
+    spec:
+      containers:
+      - name: wisecow
+        image: your_image_name:latest # Replace with your image name from Dockerfile
+        ports:
+        - containerPort: 4499 # Replace with actual port used by Wisecow
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wisecow-service
+spec:
+  selector:
+    app: wisecow
+  ports:
+  - protocol: TCP
+    port: 80 # External port for accessing Wisecow service
+    targetPort: 8000 # Port to forward traffic to Wisecow pods
+  type: LoadBalancer # Expose Wisecow service externally (adjust if needed)
